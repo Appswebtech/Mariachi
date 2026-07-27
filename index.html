@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="page-title">Mariachi Oficial - Sitio Web</title>
+
+<style>
+/* Estilos Base */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; background-color: #121212; color: #f1f1f1; }
+
+/* Navegación */
+header { background-color: #1a1a1a; border-bottom: 2px solid #d4af37; position: sticky; top: 0; z-index: 1000; }
+nav { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; padding: 1rem 1.5rem; flex-wrap: wrap; }
+.logo { font-size: 1.6rem; font-weight: bold; color: #d4af37; text-transform: uppercase; letter-spacing: 1px; }
+.nav-links { display: flex; list-style: none; gap: 1.5rem; }
+.nav-links a { color: #f1f1f1; text-decoration: none; font-weight: 500; }
+.nav-links a:hover { color: #d4af37; }
+
+/* Hero */
+.hero { text-align: center; padding: 4rem 1rem; background: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), #222; border-bottom: 1px solid #333; }
+.hero h1 { font-size: 2.4rem; color: #ffffff; margin-bottom: 0.5rem; }
+.hero p { font-size: 1.1rem; color: #d4af37; }
+
+/* Secciones */
+section { max-width: 1200px; margin: 0 auto; padding: 3rem 1.5rem; }
+h2 { font-size: 1.8rem; color: #d4af37; margin-bottom: 1.5rem; text-align: center; text-transform: uppercase; }
+
+/* Tablas y Cuadrículas */
+.tour-container { overflow-x: auto; }
+.tour-table { width: 100%; border-collapse: collapse; background-color: #1e1e1e; border-radius: 8px; overflow: hidden; }
+.tour-table th, .tour-table td { padding: 1rem; text-align: left; border-bottom: 1px solid #333; }
+.tour-table th { background-color: #2a2a2a; color: #d4af37; }
+
+.grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+
+.card { background-color: #1e1e1e; padding: 1.5rem; border-radius: 8px; border-left: 4px solid #d4af37; position: relative; }
+.card .date { font-size: 0.85rem; color: #aaa; margin-bottom: 0.5rem; }
+.card img { width: 100%; border-radius: 6px; margin-top: 0.8rem; }
+
+/* Contenedor 16:9 para YouTube */
+.video-card { background-color: #1e1e1e; border-radius: 8px; overflow: hidden; position: relative; }
+.video-responsive { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; }
+.video-responsive iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+
+/* Botón Flotante WhatsApp */
+.btn-whatsapp { position: fixed; bottom: 20px; right: 20px; background-color: #25d366; color: #fff; padding: 12px 20px; border-radius: 50px; text-decoration: none; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.5); display: none; align-items: center; gap: 8px; z-index: 2000; }
+
+/* Pie de Página */
+footer { text-align: center; padding: 2rem; background-color: #141414; border-top: 1px solid #333; color: #888; user-select: none; }
+
+/* Ventana Modal / Panel Administrador */
+.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.88); display: none; justify-content: center; align-items: center; z-index: 3000; overflow-y: auto; padding: 1rem; }
+.modal-content { background-color: #1e1e1e; padding: 2rem; border-radius: 8px; border: 2px solid #d4af37; width: 100%; max-width: 550px; color: #fff; max-height: 90vh; overflow-y: auto; }
+.modal-content h3 { color: #d4af37; margin-bottom: 1rem; text-align: center; border-bottom: 1px solid #333; padding-bottom: 0.5rem; }
+
+.form-section { margin-bottom: 1.5rem; background: #252525; padding: 1rem; border-radius: 6px; }
+.form-section h4 { color: #d4af37; margin-bottom: 0.8rem; font-size: 0.95rem; }
+.form-group { margin-bottom: 0.8rem; }
+.form-group label { display: block; margin-bottom: 0.3rem; font-size: 0.85rem; }
+.form-group input, .form-group textarea { width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid #444; background-color: #1a1a1a; color: #fff; }
+
+.btn-action { background-color: #d4af37; color: #000; border: none; padding: 0.5rem 1rem; border-radius: 4px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 0.4rem; }
+.btn-delete { background-color: #e74c3c; color: #fff; border: none; padding: 0.2rem 0.6rem; border-radius: 4px; cursor: pointer; font-size: 0.8rem; position: absolute; top: 10px; right: 10px; }
+.btn-close { background-color: #444; color: #fff; border: none; padding: 0.6rem; border-radius: 4px; cursor: pointer; width: 100%; margin-top: 1rem; }
+
+@media (max-width: 768px) { nav { flex-direction: column; gap: 1rem; } .nav-links { flex-wrap: wrap; justify-content: center; } }
+</style>
+</head>
+<body>
+
+<!-- Encabezado -->
+<header>
+<nav>
+<div class="logo" id="mariachi-name-logo">Mariachi Nombre</div>
+<ul class="nav-links">
+<li><a href="#giras">Giras</a></li>
+<li><a href="#comunicados">Comunicados</a></li>
+<li><a href="#galeria">Galería</a></li>
+<li><a href="#contacto">Contacto</a></li>
+</ul>
+</nav>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+<h1>¡Música y Pasión en Vivo!</h1>
+<p>Revisa nuestras fechas, comunicados y videos oficiales.</p>
+</section>
+
+<!-- Giras -->
+<section id="giras">
+<h2>Próximas Giras</h2>
+<div class="tour-container">
+<table class="tour-table">
+<thead>
+<tr><th>Fecha</th><th>Lugar</th><th>Evento</th></tr>
+</thead>
+<tbody>
+<tr><td>15 de Agosto</td><td>San José</td><td>Teatro Nacional</td></tr>
+<tr><td>22 de Agosto</td><td>Heredia</td><td>Plaza Central</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<!-- Comunicados -->
+<section id="comunicados">
+<h2>Comunicados</h2>
+<div class="grid-container" id="news-container">
+<!-- Los comunicados se generan dinámicamente -->
+</div>
+</section>
+
+<!-- Videos en 16:9 -->
+<section id="galeria">
+<h2>Galería de Videos</h2>
+<div class="grid-container" id="videos-container">
+<!-- Los videos se generan dinámicamente -->
+</div>
+</section>
+
+<!-- Botón WhatsApp -->
+<a href="#" id="wa-button" class="btn-whatsapp" target="_blank" rel="noopener noreferrer">💬 Contratar por WhatsApp</a>
+
+<!-- Footer (3 clics para acceder) -->
+<footer id="contacto">
+<p id="secret-trigger" style="cursor: pointer;">
+© <span id="footer-year">2026</span> <span id="mariachi-name-footer">Mariachi Nombre</span>. Todos los derechos reservados.
+</p>
+</footer>
+
+<!-- PANEL SECRETO -->
+<div class="modal-overlay" id="secret-modal">
+<div class="modal-content">
+<h3>Panel de Control Secreto</h3>
+
+<!-- Configuración General -->
+<div class="form-section">
+<h4>1. Datos de la Agrupación</h4>
+<div class="form-group">
+<label>Nombre del Mariachi:</label>
+<input type="text" id="input-mariachi-name">
+</div>
+<div class="form-group">
+<label>WhatsApp (con código de país, ej: 50688888888):</label>
+<input type="text" id="input-whatsapp">
+</div>
+<button class="btn-action" onclick="saveGeneralSettings()">Guardar Datos Generales</button>
+</div>
+
+<!-- Publicar Video -->
+<div class="form-section">
+<h4>2. Agregar Video de YouTube</h4>
+<div class="form-group">
+<label>Enlace del Video de YouTube:</label>
+<input type="text" id="input-youtube-url" placeholder="https://www.youtube.com/watch?v=...">
+</div>
+<button class="btn-action" onclick="addVideo()">Publicar Video</button>
+</div>
+
+<!-- Publicar Comunicado o Foto -->
+<div class="form-section">
+<h4>3. Agregar Comunicado / Foto</h4>
+<div class="form-group">
+<label>Título:</label>
+<input type="text" id="input-news-title">
+</div>
+<div class="form-group">
+<label>Mensaje:</label>
+<textarea id="input-news-text" rows="2"></textarea>
+</div>
+<div class="form-group">
+<label>URL de Foto (opcional - Cloudinary o enlace público):</label>
+<input type="text" id="input-news-img" placeholder="https://res.cloudinary.com/...">
+</div>
+<button class="btn-action" onclick="addNews()">Publicar Comunicado</button>
+</div>
+
+<!-- Cambiar Contraseña del Panel -->
+<div class="form-section">
+<h4>4. Seguridad</h4>
+<div class="form-group">
+<label>Nueva Contraseña:</label>
+<input type="password" id="input-new-pass">
+</div>
+<button class="btn-action" onclick="changePassword()">Actualizar Contraseña</button>
+</div>
+
+<button class="btn-close" onclick="closeModal()">Cerrar Panel</button>
+</div>
+</div>
+
+<!-- SCRIPT -->
+<script>
+// Variables de estado
+let clickCount = 0;
+let clickTimer = null;
+
+// Cargar datos
+window.onload = function() {
+loadSettings();
+renderVideos();
+renderNews();
+};
+
+// Acceso Secreto (3 clics)
+document.getElementById('secret-trigger').addEventListener('click', function() {
+clickCount++;
+if (clickCount === 3) {
+verifyPassword();
+clickCount = 0;
+}
+clearTimeout(clickTimer);
+clickTimer = setTimeout(() => { clickCount = 0; }, 1000);
+});
+
+function verifyPassword() {
+const savedPass = localStorage.getItem('admin_pass') || '1234';
+const userPass = prompt('Ingrese la contraseña de administración:');
+
+if (userPass === savedPass) {
+openModal();
+} else if (userPass !== null) {
+alert('Contraseña incorrecta.');
+}
+}
+
+function openModal() {
+document.getElementById('input-mariachi-name').value = localStorage.getItem('mariachi_name') || 'Mariachi Nombre';
+document.getElementById('input-whatsapp').value = localStorage.getItem('mariachi_wa') || '';
+document.getElementById('secret-modal').style.display = 'flex';
+}
+
+function closeModal() {
+document.getElementById('secret-modal').style.display = 'none';
+}
+
+// Configuración General
+function saveGeneralSettings() {
+const name = document.getElementById('input-mariachi-name').value.trim();
+const wa = document.getElementById('input-whatsapp').value.trim().replace(/[^0-9]/g, '');
+
+if (name) localStorage.setItem('mariachi_name', name);
+if (wa) localStorage.setItem('mariachi_wa', wa);
+
+loadSettings();
+alert('Datos guardados correctamente.');
+}
+
+function loadSettings() {
+const name = localStorage.getItem('mariachi_name') || 'Mariachi Nombre';
+const wa = localStorage.getItem('mariachi_wa');
+
+document.getElementById('mariachi-name-logo').innerText = name;
+document.getElementById('mariachi-name-footer').innerText = name;
+document.title = name + ' - Sitio Oficial';
+
+const waBtn = document.getElementById('wa-button');
+if (wa) {
+waBtn.href = https://wa.me/${wa}?text=Hola,%20quisiera%20solicitar%20información%20para%20su%20mariachi.`;
+waBtn.style.display = 'flex';
+} else {
+waBtn.style.display = 'none';
+}
+}
+
+// Seguridad
+function changePassword() {
+const newPass = document.getElementById('input-new-pass').value.trim();
+if (newPass) {
+localStorage.setItem('admin_pass', newPass);
+alert('Contraseña actualizada con éxito.');
+document.getElementById('input-new-pass').value = '';
+}
+}
+
+// Convertir enlace de YouTube a ID incrustable
+function extractYouTubeID(url) {
+const regExp = /^.(youtu.be/|v/|u/\w/|embed/|watch?v=|&v=)([^#&?]).*/;
+const match = url.match(regExp);
+return (match && match[2].length === 11) ? match[2] : null;
+}
+
+// Videos
+function addVideo() {
+const url = document.getElementById('input-youtube-url').value.trim();
+const videoID = extractYouTubeID(url);
+
+if (!videoID) {
+alert('Por favor ingrese un enlace válido de YouTube.');
+return;
+}
+
+let videos = JSON.parse(localStorage.getItem('mariachi_videos') || '[]');
+videos.push(videoID);
+localStorage.setItem('mariachi_videos', JSON.stringify(videos));
+
+document.getElementById('input-youtube-url').value = '';
+renderVideos();
+alert('Video agregado.');
+}
+
+function deleteVideo(index) {
+let videos = JSON.parse(localStorage.getItem('mariachi_videos') || '[]');
+videos.splice(index, 1);
+localStorage.setItem('mariachi_videos', JSON.stringify(videos));
+renderVideos();
+}
+
+function renderVideos() {
+const container = document.getElementById('videos-container');
+const videos = JSON.parse(localStorage.getItem('mariachi_videos') || '["tgbNymZ7vqY"]');
+const isAdmin = document.getElementById('secret-modal').style.display === 'flex';
+
+container.innerHTML = videos.map((id, index) => &lt;div class="video-card"&gt;${isAdmin ? <button class="btn-delete" onclick="deleteVideo(${index})">✕</button>: ''} &lt;div class="video-responsive"&gt; &lt;iframe src="https://www.youtube.com/embed/${id}" title="Video" allowfullscreen></iframe>
+</div>
+</div>
+`).join('');
+}
+
+// Comunicados y Fotos
+function addNews() {
+const title = document.getElementById('input-news-title').value.trim();
+const text = document.getElementById('input-news-text').value.trim();
+const img = document.getElementById('input-news-img').value.trim();
+
+if (!title || !text) {
+alert('El título y el mensaje son obligatorios.');
+return;
+}
+
+const item = {
+title,
+text,
+img,
+date: new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })
+};
+
+let news = JSON.parse(localStorage.getItem('mariachi_news') || '[]');
+news.unshift(item);
+localStorage.setItem('mariachi_news', JSON.stringify(news));
+
+document.getElementById('input-news-title').value = '';
+document.getElementById('input-news-text').value = '';
+document.getElementById('input-news-img').value = '';
+
+renderNews();
+alert('Comunicado publicado.');
+}
+
+function deleteNews(index) {
+let news = JSON.parse(localStorage.getItem('mariachi_news') || '[]');
+news.splice(index, 1);
+localStorage.setItem('mariachi_news', JSON.stringify(news));
+renderNews();
+}
+
+function renderNews() {
+const container = document.getElementById('news-container');
+const defaultNews = [{
+title: '¡Bienvenidos a nuestro sitio oficial!',
+text: 'Nos alegra compartir con ustedes nuestras próximas fechas y material audiovisual.',
+date: new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' }),
+img: ''
+}];
+
+const news = JSON.parse(localStorage.getItem('mariachi_news') || JSON.stringify(defaultNews));
+const isAdmin = document.getElementById('secret-modal').style.display === 'flex';
+
+container.innerHTML = news.map((item, index) => &lt;article class="card"&gt; ${isAdmin ? <button class="btn-delete" onclick="deleteNews(${index})">✕</button>: ''} &lt;div class="date"&gt;${item.date}</div>
+<h3>${item.title}&lt;/h3&gt; &lt;p&gt;${item.text}</p>
+${item.img ?: ''} &lt;/article&gt;).join('');
+}
+</script>
+</body>
+</html>
